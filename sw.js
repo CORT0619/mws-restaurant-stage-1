@@ -6,6 +6,9 @@ self.addEventListener('install', function(event) {
         images.push('i'+ '.jpg');
       }
       return cache.addAll([
+        '/',
+        'index.html',
+        'restaurant.html',
         'css/styles.css',
         'js/dbhelper.js',
         'js/main.js',
@@ -27,9 +30,31 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  console.log(event.request.url);
   event.respondWith(
     caches.match(event.request).then(function(match) {
       return match || fetch(event.request);
     })
+    .catch(function(err) {
+      console.log('err ', err);
+    })
+    // caches.match(event.request).then(function(match) {
+    //   if (match) return match;
+
+    //   var fetchRequest = event.request.clone();
+
+    //   return fetch(fetchRequest).then(function(response) {
+    //     if (!response || response.status !== 200 || response.type !== 'basic') {
+    //       return response;
+    //     }
+    //     var responseToCache = response.clone();
+
+    //     caches.open('mws-restaurant-1').then(function(cache) {
+    //       cache.put(event.request, responseToCache);
+    //     });
+
+    //     return response;
+    //   })
+    // })
   );
 });
